@@ -103,3 +103,6 @@ ENV/
 #data files
 *.csv
 *.tar.gz
+
+#DS Store
+*.DS_Store

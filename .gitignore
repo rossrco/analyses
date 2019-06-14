@@ -100,9 +100,12 @@ ENV/
 # mypy
 .mypy_cache/
 
-#data files
+# data files
 *.csv
 *.tar.gz
 
-#DS Store
+# DS Store
 *.DS_Store
+
+# Config file
+config.yaml

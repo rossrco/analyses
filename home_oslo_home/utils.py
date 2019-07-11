@@ -3,8 +3,8 @@ import os
 import pandas as pd
 
 
-def get_real_estate_data(queries, client):
-    request = queries['combined_analysis_data.sql']
+def get_data(queries, query_file, client):
+    request = queries[query_file]
     data = client.query(request).to_dataframe()
     return data
 

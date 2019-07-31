@@ -24,7 +24,6 @@ def get_postcode_from_address(address):
     try:
         return re.search(r'(.*)(\d{4})(.*)', address, re.I)[2]
     except Exception as e:
-        print(e)
         return None
 
 

@@ -109,3 +109,6 @@ ENV/
 
 # Config file
 config.yaml
+
+# JSON files
+*.json

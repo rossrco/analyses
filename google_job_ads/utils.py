@@ -23,3 +23,25 @@ def get_page_data(url, js_wait_time=2):
     html = driver.page_source
     soup = BeautifulSoup(html)
     return soup
+
+
+def get_page_url(page_num, search_str):
+    return config['base_url'] + f'?page={page_num}' + '&q=' + quote(search_str)
+
+
+def extract_tiles(search_str, min_wait, max_wait, max_pages):
+    i = 1
+    r_button = True
+
+    while i <= max_pages and r_button:
+        time.sleep(random.randint(min_wait, max_wait))
+        page_url = get_page_url(i, search_str)
+
+        soup = get_page_data(page_url)
+
+        ads = soup.find_all('a', {'class': 'gc-card'})
+        i += 1
+        r_button_tag = soup.find('a', config['r_button'])
+        r_button = r_button_tag is not None
+        for a in ads:
+            yield a

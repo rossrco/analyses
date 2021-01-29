@@ -62,3 +62,13 @@ def extract_qualifications(soup, qual_type='minimum'):
         pass
 
     return qual
+
+
+def extract_job_descr(soup):
+    job_descr = None
+    try:
+        job_descr = soup.find('div', {'itemprop': 'description'}).text
+    except AttributeError:
+        pass
+
+    return job_descr

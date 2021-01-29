@@ -72,3 +72,15 @@ def extract_job_descr(soup):
         pass
 
     return job_descr
+
+
+def extract_responsibilities(soup):
+    resp = []
+
+    try:
+        resp = soup.find('div', {'itemprop': 'responsibilities'}).find_all('li')
+        resp = [el.text.strip() for el in resp]
+    except AttributeError:
+        pass
+
+    return resp

@@ -45,3 +45,20 @@ def extract_tiles(search_str, min_wait, max_wait, max_pages):
         r_button = r_button_tag is not None
         for a in ads:
             yield a
+
+
+def extract_qualifications(soup, qual_type='minimum'):
+    qual = []
+
+    try:
+        qualifications = soup.find('div', {'itemprop': 'qualifications'})
+        if qual_type == 'minimum':
+            qual = qualifications.find_all('ul')[0]
+        elif qual_type == 'preferred':
+            qual = qualifications.find_all('ul')[1]
+
+        qual = [el.text.strip() for el in qual.find_all('li')]
+    except AttributeError:
+        pass
+
+    return qual

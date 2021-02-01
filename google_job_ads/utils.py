@@ -61,7 +61,7 @@ def get_qual(soup, qual_type='minimum'):
     except AttributeError:
         pass
 
-    return qual
+    return '\n'.join(qual)
 
 
 def get_job_descr(soup):
@@ -83,7 +83,7 @@ def get_responsb(soup):
     except AttributeError:
         pass
 
-    return resp
+    return '\n'.join(resp)
 
 
 def get_job_title(soup):

@@ -99,3 +99,29 @@ def get_job_location(soup):
         return soup.find('div', {'itemprop': 'addressLocality'}).text.strip()
     except AttributeError:
         return None
+
+
+def get_data(tiles):
+    i = 0
+    res_ads = pd.DataFrame()
+
+    for t in tiles:
+        print(f'Vieweing ad {i}', end='\r')
+
+        ad = dict()
+        ad['title'] = get_job_title(t)
+        ad['id'] = get_ad_id(t)
+        ad['location'] = get_job_location(t)
+
+        ad_url = config['base_url'] + ad['id']
+        ad_soup = get_page_data(ad_url)
+
+        ad['minimum_qual'] = get_qual(ad_soup, qual_type='minimum')
+        ad['preferred_qual'] = get_qual(ad_soup, qual_type='preferred')
+        ad['job_descr'] = get_job_descr(ad_soup)
+        ad['responsibilities'] = get_responsb(ad_soup)
+
+        res_ads = res_ads.append(ad, ignore_index=True)
+        i += 1
+
+    return res_ads

@@ -39,7 +39,7 @@ def extract_tiles(search_str, min_wait, max_wait, max_pages):
 
         soup = get_page_data(page_url)
 
-        ads = soup.find_all('a', {'class': 'gc-card'})
+        ads = soup.find_all('a', config['ad_tiles'])
         i += 1
         r_button_tag = soup.find('a', config['r_button'])
         r_button = r_button_tag is not None
@@ -51,7 +51,7 @@ def get_qual(soup, qual_type='minimum'):
     qual = []
 
     try:
-        qualifications = soup.find('div', {'itemprop': 'qualifications'})
+        qualifications = soup.find('div', config['qual'])
         if qual_type == 'minimum':
             qual = qualifications.find_all('ul')[0]
         elif qual_type == 'preferred':
@@ -67,7 +67,7 @@ def get_qual(soup, qual_type='minimum'):
 def get_job_descr(soup):
     job_descr = None
     try:
-        job_descr = soup.find('div', {'itemprop': 'description'}).text
+        job_descr = soup.find('div', config['job_descr']).text
     except AttributeError:
         pass
 
@@ -78,7 +78,7 @@ def get_responsb(soup):
     resp = []
 
     try:
-        resp = soup.find('div', {'itemprop': 'responsibilities'}).find_all('li')
+        resp = soup.find('div', config['responsb']).find_all('li')
         resp = [el.text.strip() for el in resp]
     except AttributeError:
         pass
@@ -96,7 +96,7 @@ def get_ad_id(soup):
 
 def get_job_location(soup):
     try:
-        return soup.find('div', {'itemprop': 'addressLocality'}).text.strip()
+        return soup.find('div', config['job_loc']).text.strip()
     except AttributeError:
         return None
 

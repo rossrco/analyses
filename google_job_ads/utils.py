@@ -47,7 +47,7 @@ def extract_tiles(search_str, min_wait, max_wait, max_pages):
             yield a
 
 
-def extract_qualifications(soup, qual_type='minimum'):
+def get_qual(soup, qual_type='minimum'):
     qual = []
 
     try:
@@ -64,7 +64,7 @@ def extract_qualifications(soup, qual_type='minimum'):
     return qual
 
 
-def extract_job_descr(soup):
+def get_job_descr(soup):
     job_descr = None
     try:
         job_descr = soup.find('div', {'itemprop': 'description'}).text
@@ -74,7 +74,7 @@ def extract_job_descr(soup):
     return job_descr
 
 
-def extract_responsibilities(soup):
+def get_responsb(soup):
     resp = []
 
     try:
@@ -84,3 +84,18 @@ def extract_responsibilities(soup):
         pass
 
     return resp
+
+
+def get_job_title(soup):
+    return soup.attrs.get('aria-label')
+
+
+def get_ad_id(soup):
+    return soup.attrs.get('data-gtm-label')
+
+
+def get_job_location(soup):
+    try:
+        return soup.find('div', {'itemprop': 'addressLocality'}).text.strip()
+    except AttributeError:
+        return None

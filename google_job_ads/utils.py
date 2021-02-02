@@ -21,7 +21,7 @@ def get_page_data(url, js_wait_time=2):
     driver.get(url)
     time.sleep(js_wait_time)  # load the js
     html = driver.page_source
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, 'html.parser')
     return soup
 
 

@@ -125,3 +125,40 @@ def get_data(tiles):
         i += 1
 
     return res_ads
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Run the crawler')
+
+    parser.add_argument('--search_str',
+                        help='Job ad search string',
+                        type=str,
+                        default='machine learning engineer')
+
+    parser.add_argument('--dest_file',
+                        help='Destination file name',
+                        type=str,
+                        default='job_ads.csv')
+
+    parser.add_argument('--min_wait',
+                        help='Min number of seconds to wait between pages',
+                        type=int,
+                        default=1)
+
+    parser.add_argument('--max_wait',
+                        help='Max number of seconds to wait between pages',
+                        type=int,
+                        default=2)
+
+    parser.add_argument('--max_pages',
+                        help='Max number of pages to view',
+                        type=int,
+                        default=2)
+
+    args = parser.parse_args()
+
+    tiles = extract_tiles(args.search_str, args.min_wait, args.max_wait,
+                          args.max_pages)
+    res_ads = get_data(tiles)
+    res_ads.to_csv(args.dest_file, mode='a', header=False)

@@ -1,10 +1,13 @@
+import io
 import yaml
 import time
 import random
+import argparse
 import pandas as pd
 from urllib.parse import quote
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from google.cloud import storage
 
 
 with open('config.yaml', 'r') as config_file:
@@ -128,18 +131,12 @@ def get_data(tiles):
 
 
 if __name__ == '__main__':
-    import argparse
     parser = argparse.ArgumentParser(description='Run the crawler')
 
     parser.add_argument('--search_str',
                         help='Job ad search string',
                         type=str,
                         default='machine learning engineer')
-
-    parser.add_argument('--dest_file',
-                        help='Destination file name',
-                        type=str,
-                        default='job_ads.csv')
 
     parser.add_argument('--min_wait',
                         help='Min number of seconds to wait between pages',
@@ -158,7 +155,16 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    client = storage.Client(config['project'])
+    bucket = client.get_bucket(config['bucket'])
+    blob = bucket.blob(config['dest_file'])
+    file_content = io.BytesIO(blob.download_as_string())
+
+    ads = pd.read_csv(file_content)
+
     tiles = extract_tiles(args.search_str, args.min_wait, args.max_wait,
                           args.max_pages)
     res_ads = get_data(tiles)
-    res_ads.to_csv(args.dest_file, mode='a', header=False)
+    ads = ads.append(res_ads, ignore_index=True).drop_duplicates()
+
+    blob.upload_from_string(ads.to_csv(index=False))

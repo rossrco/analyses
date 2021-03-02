@@ -40,7 +40,7 @@ def extract_tiles(search_str, min_wait, max_wait, max_pages):
         time.sleep(random.randint(min_wait, max_wait))
         page_url = get_page_url(i, search_str)
 
-        soup = get_page_data(page_url)
+        soup = get_page_data(page_url, min_wait)
 
         ads = soup.find_all('a', config['ad_tiles'])
         i += 1
@@ -104,7 +104,7 @@ def get_job_location(soup):
         return None
 
 
-def get_data(tiles):
+def get_data(tiles, min_wait):
     i = 0
     res_ads = pd.DataFrame()
 
@@ -117,7 +117,7 @@ def get_data(tiles):
         ad['location'] = get_job_location(t)
 
         ad_url = config['base_url'] + ad['id']
-        ad_soup = get_page_data(ad_url)
+        ad_soup = get_page_data(ad_url, min_wait)
 
         ad['minimum_qual'] = get_qual(ad_soup, qual_type='minimum')
         ad['preferred_qual'] = get_qual(ad_soup, qual_type='preferred')
@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
     tiles = extract_tiles(args.search_str, args.min_wait, args.max_wait,
                           args.max_pages)
-    res_ads = get_data(tiles)
+    res_ads = get_data(tiles, args.min_wait)
     ads = ads.append(res_ads, ignore_index=True).drop_duplicates()
 
     blob.upload_from_string(ads.to_csv(index=False))
